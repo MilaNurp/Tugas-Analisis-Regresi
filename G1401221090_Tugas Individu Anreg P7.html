@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Mila Nurpitriani ~ G1401221090" />
+  <meta name="dcterms.date" content="2024-03-05" />
+  <title>Tugas Individu Analisis Regresi P7</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Tugas Individu Analisis Regresi P7</h1>
+<p class="author">Mila Nurpitriani ~ G1401221090</p>
+<p class="date">2024-03-05</p>
+</header>
+<h2 id="import-data">Import Data</h2>
+<pre class="{r}"><code>library(readxl)
+DataP7 &lt;-read_xlsx(&quot;E:/STA Lectures/SEM 4/Analisis Regresi (STA1231)/UTS/Tugas/Tugas Individu/Data Tugas P7.xlsx&quot;)
+DataP7
+
+No &lt;- (1:15)
+x &lt;- c(2,5,7,10,14,19,26,31,34,38,45,52,53,60,65)
+y &lt;- c(54,50,45,37,35,25,20,16,18,13,8,11,8,4,6)
+Data &lt;- data.frame(No,x,y)
+Data</code></pre>
+<h2 id="diagnosis-regresi">Diagnosis regresi</h2>
+<pre class="{r}"><code>model.reg= lm(formula = y ~x, data = Data)
+model.reg
+summary(model.reg)</code></pre>
+<h2 id="scatter-plot">scatter plot</h2>
+<pre class="{r}"><code>plot(x = Data$x,y = Data$y)</code></pre>
+<h2 id="uji-asumsi">Uji Asumsi</h2>
+<h3 id="nilai-harapan-sisaan-tidak-sama-dengan-nol">1. Nilai harapan
+sisaan tidak sama dengan nol</h3>
+<p>Untuk menguji nilai harapan sisaan sama dengan nol atau tidak
+menggunakan t.test dengan hipotesis : H0: Nilai harapan sisaan sama
+dengan 0 H1: Nilai harapan sisaan tidak sama dengan 0</p>
+<pre class="{r}"><code>harapan_model.reg &lt;- t.test(model.reg$residuals,mu = 0,conf.level = 0.95)
+harapan_model.reg
+ifelse(harapan_model.reg$p.value &gt; 0.05, &quot;Nilai harapan sisaan sama dengan 0&quot;, &quot;Nilai harapan sisaan tidak sama dengan 0&quot;)</code></pre>
+<h3 id="ragam-sisaan-homogen">2. Ragam sisaan homogen</h3>
+<p>Untuk menguji ragam sisaan homogen atau tidak menggunakan uji
+Breusch-Pagan menggunakan fungsi bptest dengan hipotesis sebagai
+berikut: H0: Ragam sisaan sama dengan 0 H1: Ragam sisaan tidak sama
+dengan 0</p>
+<pre class="{r}"><code>(homogen_model.reg &lt;- bptest(model.reg))
+ifelse(homogen_model.reg$p.value &lt; 0.05, &quot;Ragam Tidak Homogen&quot;, &quot;Ragam Homogen&quot;)</code></pre>
+<h3 id="sisaan-saling-bebas">3. Sisaan saling bebas</h3>
+<p>Uji formal untuk mendeteksi sisaan saling bebas atau tidak dapat
+dilakukan dengan uji Durbin-Watson menggunakan fungsi durbinWatsonTest.
+Uji ini memiliki hipotesis sebagai berikut,</p>
+<p>H0:Sisaan saling bebas (tidak ada autokorelasi) H1:Sisaan tisak
+saling bebas (ada autokorelasi)</p>
+<pre class="{r}"><code>(uji_autokol &lt;- durbinWatsonTest(model.reg,alternative=&quot;two.sided&quot;))
+ifelse(uji_autokol$p &lt; 0.05, &quot;Ada Autokorelasi&quot;, &quot;Tidak Ada Autokorelasi&quot;)</code></pre>
+<pre class="{r}"><code>plot(x = 1:dim(DataP7)[1],
+     y = model.reg$residuals,
+     type = &#39;b&#39;, 
+     ylab = &quot;Residuals&quot;,
+     xlab = &quot;Observation&quot;)</code></pre>
+<h3 id="uji-normalitas">4. Uji Normalitas</h3>
+<p>Uji formal untuk mendeteksi mormalitas sisaan dapat dilakukan dengan
+uji Kolmogorov-Smirnov menggunakan fungsi lillie.test. Uji ini memiliki
+hipotesis sebagai berikut,</p>
+<p>H0 : sisaan menyebar Normal H1 : sisaan tidak menyebar Normal</p>
+<pre class="{r}"><code>library(nortest)
+sisaan_model &lt;- resid(model.reg)
+(norm_model &lt;- lillie.test(sisaan_model))
+ifelse(norm_model$p.value &lt; 0.05, &quot;Sisaan Tidak Menyebar Normal&quot;, &quot;Sisaan Menyebar Normal&quot;)
+</code></pre>
+<p>Jika normalitas diuji menggunakan uji Anderson-Darling</p>
+<pre class="{r}"><code>(norm1_model &lt;- nortest::ad.test(model.reg$residuals))
+ifelse(norm_model$p.value &lt; 0.05, &quot;Sisaan Tidak Menyebar Normal&quot;, &quot;Sisaan Menyebar Normal&quot;)</code></pre>
+<p>Normalitas diuji dengan shapiro.test</p>
+<pre class="{r}"><code>library(car)
+(norm2_model &lt;- shapiro.test(model.reg$residuals))
+ifelse(norm2_model$p.value &lt; 0.05, &quot;Sisaan Tidak Menyebar Normal&quot;, &quot;Sisaan Menyebar Normal&quot;)</code></pre>
+<p>Q-Q plot untuk menguji normalitas</p>
+<pre class="{r}"><code>plot(model.reg,2)</code></pre>
+<p>Berdasarkan uji yang telah dilakukan maka data ini memenuhi semua
+asumsi Gauss- Markov kecuali sisaan saling bebas karena berdasarkan uji
+yang telah dilakukan sisaan tidak saling bebas atau terdapat
+autokorelasi.</p>
+<h2 id="penanganan-masalah">Penanganan masalah</h2>
+<h3 id="transformasi-data">Transformasi data</h3>
+<p>Data ditransformasi untuk memperkecil y dengan mengakarkan nilai y
+untuk meluruskan garis regresi.</p>
+<pre class="{r}"><code>Data$y_tr &lt;- sqrt(Data$y) 
+Data</code></pre>
+<pre class="{r}"><code>plot(x=Data$x, y=Data$y_tr)</code></pre>
+<pre class="{r}"><code>model_tr &lt;- lm(y_tr~x, data = Data)
+summary(model_tr)</code></pre>
+<h3 id="uji-asumsi-untuk-data-hasil-transformasi">Uji asumsi untuk data
+hasil transformasi</h3>
+<h4 id="nilai-harapan-sisaan-tidak-sama-dengan-nol-1">1. Nilai harapan
+sisaan tidak sama dengan nol</h4>
+<p>Untuk menguji nilai harapan sisaan sama dengan nol atau tidak
+menggunakan t.test dengan hipotesis : H0: Nilai harapan sisaan sama
+dengan 0 H1: Nilai harapan sisaan tidak sama dengan 0</p>
+<pre class="{r}"><code>harapan_model_tr &lt;- t.test(model_tr$residuals,mu = 0,conf.level = 0.95)
+harapan_model_tr
+ifelse(harapan_model_tr$p.value &gt; 0.05, &quot;Nilai harapan sisaan sama dengan 0&quot;, &quot;Nilai harapan sisaan tidak sama dengan 0&quot;)</code></pre>
+<h3 id="ragam-sisaan-homogen-1">2. Ragam sisaan homogen</h3>
+<p>Untuk menguji ragam sisaan homogen atau tidak menggunakan uji
+Breusch-Pagan menggunakan fungsi bptest dengan hipotesis sebagai
+berikut: H0: Ragam sisaan sama dengan 0 H1: Ragam sisaan tidak sama
+dengan 0</p>
+<pre class="{r}"><code>(homogen_model_tr &lt;- bptest(model_tr))
+ifelse(homogen_model_tr$p.value &lt; 0.05, &quot;Ragam Tidak Homogen&quot;, &quot;Ragam Homogen&quot;)</code></pre>
+<h3 id="sisaan-saling-bebas-1">3. Sisaan saling bebas</h3>
+<p>Uji formal untuk mendeteksi sisaan saling bebas atau tidak dapat
+dilakukan dengan uji Durbin-Watson menggunakan fungsi durbinWatsonTest.
+Uji ini memiliki hipotesis sebagai berikut,</p>
+<p>H0:Sisaan saling bebas (tidak ada autokorelasi) H1:Sisaan tisak
+saling bebas (ada autokorelasi)</p>
+<pre class="{r}"><code>(uji_autokol_tr &lt;- durbinWatsonTest(model_tr,alternative=&quot;two.sided&quot;))
+ifelse(uji_autokol_tr$p &lt; 0.05, &quot;Ada Autokorelasi&quot;, &quot;Tidak Ada Autokorelasi&quot;)</code></pre>
+<pre class="{r}"><code>plot(x = 1:dim(DataP7)[1],
+     y = model_tr$residuals,
+     type = &#39;b&#39;, 
+     ylab = &quot;Residuals&quot;,
+     xlab = &quot;Observation&quot;)</code></pre>
+<h3 id="uji-normalitas-1">4. Uji Normalitas</h3>
+<p>Uji formal untuk mendeteksi mormalitas sisaan dapat dilakukan dengan
+uji Kolmogorov-Smirnov menggunakan fungsi lillie.test. Uji ini memiliki
+hipotesis sebagai berikut,</p>
+<p>H0 : sisaan menyebar Normal H1 : sisaan tidak menyebar Normal</p>
+<pre class="{r}"><code>library(nortest)
+sisaan_model_tr &lt;- resid(model_tr)
+(norm_model_tr &lt;- lillie.test(sisaan_model_tr))
+ifelse(norm_model_tr$p.value &lt; 0.05, &quot;Sisaan Tidak Menyebar Normal&quot;, &quot;Sisaan Menyebar Normal&quot;)
+</code></pre>
+<p>Jika normalitas diuji menggunakan uji Anderson-Darling</p>
+<pre class="{r}"><code>(norm1_model_tr &lt;- nortest::ad.test(model_tr$residuals))
+ifelse(norm1_model_tr$p.value &lt; 0.05, &quot;Sisaan Tidak Menyebar Normal&quot;, &quot;Sisaan Menyebar Normal&quot;)</code></pre>
+<p>Normalitas diuji dengan shapiro.test</p>
+<pre class="{r}"><code>library(car)
+(norm2_model_tr &lt;- shapiro.test(model_tr$residuals))
+ifelse(norm2_model_tr$p.value &lt; 0.05, &quot;Sisaan Tidak Menyebar Normal&quot;, &quot;Sisaan Menyebar Normal&quot;)</code></pre>
+<p>Q-Q plot untuk menguji normalitas</p>
+<pre class="{r}"><code>plot(model_tr,2)</code></pre>
+<p>Setelah dilakukan transformasi terdap nilai y dengan memperkecil
+nilai y, semua asumsi Gauss-MArkov terpenuhi.</p>
+<pre class="{r}"><code>reg &lt;- lm(y_tr~x, data= Data)
+summary(reg)</code></pre>
+<p>Dugaan persamaan regresi hasil transformasi : <span
+class="math display">$$
+\sqrt {y^*} =  7.015 - 0.081x
+$$</span> #### Transformasi balik</p>
+<p><span
+class="math display"><em>y</em><sup>*</sup> = (7.015−0.081<em>x</em>)<sup>2</sup></span>
+<span
+class="math display"><em>y</em><sup>*</sup> = 49.210 − 1.136<em>x</em> + 0.0065<em>x</em><sup>2</sup></span></p>
+</body>
+</html>

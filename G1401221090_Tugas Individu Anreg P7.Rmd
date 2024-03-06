@@ -1,0 +1,212 @@
+---
+title: "Tugas Individu Analisis Regresi P7"
+author: "Mila Nurpitriani ~ G1401221090"
+date: "2024-03-05"
+output: html_document
+---
+
+## Import Data
+
+```{r}
+library(readxl)
+DataP7 <-read_xlsx("E:/STA Lectures/SEM 4/Analisis Regresi (STA1231)/UTS/Tugas/Tugas Individu/Data Tugas P7.xlsx")
+DataP7
+
+No <- (1:15)
+x <- c(2,5,7,10,14,19,26,31,34,38,45,52,53,60,65)
+y <- c(54,50,45,37,35,25,20,16,18,13,8,11,8,4,6)
+Data <- data.frame(No,x,y)
+Data
+```
+## Diagnosis regresi
+```{r}
+model.reg= lm(formula = y ~x, data = Data)
+model.reg
+summary(model.reg)
+```
+
+## scatter plot
+```{r}
+plot(x = Data$x,y = Data$y)
+```
+
+## Uji Asumsi
+### 1. Nilai harapan sisaan tidak sama dengan nol
+Untuk menguji nilai harapan sisaan sama dengan nol atau tidak menggunakan t.test dengan hipotesis :
+H0: Nilai harapan sisaan sama dengan 0
+H1: Nilai harapan sisaan tidak sama dengan 0
+
+```{r}
+harapan_model.reg <- t.test(model.reg$residuals,mu = 0,conf.level = 0.95)
+harapan_model.reg
+ifelse(harapan_model.reg$p.value > 0.05, "Nilai harapan sisaan sama dengan 0", "Nilai harapan sisaan tidak sama dengan 0")
+```
+
+### 2. Ragam sisaan homogen
+Untuk menguji ragam sisaan homogen atau tidak menggunakan uji Breusch-Pagan menggunakan fungsi bptest dengan hipotesis sebagai berikut:
+H0: Ragam sisaan sama dengan 0
+H1: Ragam sisaan tidak sama dengan 0
+```{r}
+(homogen_model.reg <- bptest(model.reg))
+ifelse(homogen_model.reg$p.value < 0.05, "Ragam Tidak Homogen", "Ragam Homogen")
+```
+
+
+### 3. Sisaan saling bebas
+Uji formal untuk mendeteksi sisaan saling bebas atau tidak  dapat dilakukan dengan uji Durbin-Watson menggunakan fungsi durbinWatsonTest. Uji ini memiliki hipotesis sebagai berikut,
+
+H0:Sisaan saling bebas (tidak ada autokorelasi)
+H1:Sisaan tisak saling bebas (ada autokorelasi)
+```{r}
+(uji_autokol <- durbinWatsonTest(model.reg,alternative="two.sided"))
+ifelse(uji_autokol$p < 0.05, "Ada Autokorelasi", "Tidak Ada Autokorelasi")
+```
+```{r}
+plot(x = 1:dim(DataP7)[1],
+     y = model.reg$residuals,
+     type = 'b', 
+     ylab = "Residuals",
+     xlab = "Observation")
+```
+
+
+### 4. Uji Normalitas
+Uji formal untuk mendeteksi mormalitas sisaan dapat dilakukan dengan uji Kolmogorov-Smirnov menggunakan fungsi lillie.test. Uji ini memiliki hipotesis sebagai berikut,
+
+H0 : sisaan menyebar Normal
+H1 : sisaan tidak menyebar Normal
+```{r}
+library(nortest)
+sisaan_model <- resid(model.reg)
+(norm_model <- lillie.test(sisaan_model))
+ifelse(norm_model$p.value < 0.05, "Sisaan Tidak Menyebar Normal", "Sisaan Menyebar Normal")
+
+```
+
+Jika normalitas diuji menggunakan uji Anderson-Darling
+```{r}
+(norm1_model <- nortest::ad.test(model.reg$residuals))
+ifelse(norm_model$p.value < 0.05, "Sisaan Tidak Menyebar Normal", "Sisaan Menyebar Normal")
+```
+
+Normalitas diuji dengan shapiro.test
+```{r}
+library(car)
+(norm2_model <- shapiro.test(model.reg$residuals))
+ifelse(norm2_model$p.value < 0.05, "Sisaan Tidak Menyebar Normal", "Sisaan Menyebar Normal")
+```
+
+Q-Q plot untuk menguji normalitas
+```{r}
+plot(model.reg,2)
+```
+
+Berdasarkan uji yang telah dilakukan maka data ini memenuhi semua asumsi Gauss- Markov kecuali sisaan saling bebas karena berdasarkan uji yang telah dilakukan sisaan tidak saling bebas atau terdapat autokorelasi.
+
+
+
+## Penanganan masalah
+### Transformasi data
+
+Data ditransformasi untuk memperkecil y dengan mengakarkan nilai y untuk meluruskan garis regresi.
+```{r}
+Data$y_tr <- sqrt(Data$y) 
+Data
+```
+
+```{r}
+plot(x=Data$x, y=Data$y_tr)
+```
+
+```{r}
+model_tr <- lm(y_tr~x, data = Data)
+summary(model_tr)
+```
+
+### Uji asumsi untuk data hasil transformasi
+#### 1. Nilai harapan sisaan tidak sama dengan nol
+Untuk menguji nilai harapan sisaan sama dengan nol atau tidak menggunakan t.test dengan hipotesis :
+H0: Nilai harapan sisaan sama dengan 0
+H1: Nilai harapan sisaan tidak sama dengan 0
+
+```{r}
+harapan_model_tr <- t.test(model_tr$residuals,mu = 0,conf.level = 0.95)
+harapan_model_tr
+ifelse(harapan_model_tr$p.value > 0.05, "Nilai harapan sisaan sama dengan 0", "Nilai harapan sisaan tidak sama dengan 0")
+```
+
+### 2. Ragam sisaan homogen
+Untuk menguji ragam sisaan homogen atau tidak menggunakan uji Breusch-Pagan menggunakan fungsi bptest dengan hipotesis sebagai berikut:
+H0: Ragam sisaan sama dengan 0
+H1: Ragam sisaan tidak sama dengan 0
+```{r}
+(homogen_model_tr <- bptest(model_tr))
+ifelse(homogen_model_tr$p.value < 0.05, "Ragam Tidak Homogen", "Ragam Homogen")
+```
+
+### 3. Sisaan saling bebas
+Uji formal untuk mendeteksi sisaan saling bebas atau tidak  dapat dilakukan dengan uji Durbin-Watson menggunakan fungsi durbinWatsonTest. Uji ini memiliki hipotesis sebagai berikut,
+
+H0:Sisaan saling bebas (tidak ada autokorelasi)
+H1:Sisaan tisak saling bebas (ada autokorelasi)
+```{r}
+(uji_autokol_tr <- durbinWatsonTest(model_tr,alternative="two.sided"))
+ifelse(uji_autokol_tr$p < 0.05, "Ada Autokorelasi", "Tidak Ada Autokorelasi")
+```
+
+```{r}
+plot(x = 1:dim(DataP7)[1],
+     y = model_tr$residuals,
+     type = 'b', 
+     ylab = "Residuals",
+     xlab = "Observation")
+```
+
+### 4. Uji Normalitas
+Uji formal untuk mendeteksi mormalitas sisaan dapat dilakukan dengan uji Kolmogorov-Smirnov menggunakan fungsi lillie.test. Uji ini memiliki hipotesis sebagai berikut,
+
+H0 : sisaan menyebar Normal
+H1 : sisaan tidak menyebar Normal
+```{r}
+library(nortest)
+sisaan_model_tr <- resid(model_tr)
+(norm_model_tr <- lillie.test(sisaan_model_tr))
+ifelse(norm_model_tr$p.value < 0.05, "Sisaan Tidak Menyebar Normal", "Sisaan Menyebar Normal")
+
+```
+Jika normalitas diuji menggunakan uji Anderson-Darling
+```{r}
+(norm1_model_tr <- nortest::ad.test(model_tr$residuals))
+ifelse(norm1_model_tr$p.value < 0.05, "Sisaan Tidak Menyebar Normal", "Sisaan Menyebar Normal")
+```
+
+Normalitas diuji dengan shapiro.test
+```{r}
+library(car)
+(norm2_model_tr <- shapiro.test(model_tr$residuals))
+ifelse(norm2_model_tr$p.value < 0.05, "Sisaan Tidak Menyebar Normal", "Sisaan Menyebar Normal")
+```
+
+Q-Q plot untuk menguji normalitas
+```{r}
+plot(model_tr,2)
+```
+Setelah dilakukan transformasi terdap nilai y dengan memperkecil nilai y, semua asumsi Gauss-MArkov terpenuhi.
+
+```{r}
+reg <- lm(y_tr~x, data= Data)
+summary(reg)
+```
+
+Dugaan persamaan regresi hasil transformasi :
+$$
+\sqrt {y^*} =  7.015 - 0.081x
+$$
+#### Transformasi balik
+
+$$
+y^* = (7.015 - 0.081x)^2
+$$
+$$
+y^* = 49.210 - 1.136x + 0.0065x^2
+$$
